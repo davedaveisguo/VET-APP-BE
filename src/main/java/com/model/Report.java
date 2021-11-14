@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static javax.persistence.GenerationType.*;
 
 @Data
 @NoArgsConstructor
@@ -22,15 +22,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class Report {
     @Id
-    @SequenceGenerator(
-            name = "report_sequence",
-            sequenceName = "report_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "report_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )

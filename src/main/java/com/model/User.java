@@ -1,6 +1,7 @@
 package com.model;
 
 
+import com.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,7 +10,10 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
+import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
@@ -23,31 +27,18 @@ public class User implements Serializable {
 
 
     @Id
-    @SequenceGenerator(
-            name = "user_sequence",
-            sequenceName = "user_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "user_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )
     private Long id;
 
     @Column(
-            name = "last_name",
+            name = "user_name",
             nullable = false
     )
-    private String lastName;
+    private String username;
 
-    @Column(
-            name = "first_name",
-            nullable = false
-    )
-    private String firstName;
 
 
     @Column(
@@ -58,15 +49,12 @@ public class User implements Serializable {
     private String phone;
 
 
-    @Column(
-            name = "status",
-            nullable = false
-    )
-    private String status;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private Status status;
 
     @Column(
-            name = "dob",
-            nullable = false
+            name = "dob"
     )
     private LocalDate dob;
 
@@ -78,16 +66,22 @@ public class User implements Serializable {
     )
     private String email;
 
-    @ManyToOne
-    @JoinColumn(
-            name = "role_id",
-            nullable = false,
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "user_role_fk"
-            )
+
+
+    @Column(
+            name = "password",
+            nullable = false
     )
-    private Role role;
+    private String password;
+
+
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(	name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
+    private Set<Role> roles = new HashSet<>();
 
 
     @OneToOne(
@@ -101,22 +95,25 @@ public class User implements Serializable {
         this.request = request;
     }
 
-    public Role getRole() {
-        return role;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
-    public User(String lastName, String firstName, String phone, String status, LocalDate dob, String email) {
-        this.lastName = lastName;
-        this.firstName = firstName;
+    public User(String username, String phone, Status status, LocalDate dob, String email) {
+        this.username = username;
         this.phone = phone;
         this.status = status;
         this.dob = dob;
         this.email = email;
     }
 
-
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }

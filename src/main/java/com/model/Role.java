@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 
@@ -22,55 +23,19 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class Role {
     @Id
-    @SequenceGenerator(
-            name = "role_sequence",
-            sequenceName = "role_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "role_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )
     private Long id;
 
-    @Column(
-            name = "role_name",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
-    private String roleName;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role_name", length = 20)
+    private ERole roleName;
 
-
-    @Column(
-            name = "role_num",
-            nullable = false
-    )
-    private int roleNum;
-
-    @OneToMany(
-            mappedBy = "role",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            fetch = FetchType.LAZY
-    )
-    private List<User> users = new ArrayList<>();
-
-    public void addUser(User user){
-        if (!this.users.contains(user)) {
-            this.users.add(user);
-            user.setRole(this);
-        }
+    public Role(ERole roleName) {
+        this.roleName = roleName;
     }
 
-
-    public void removeUser(User user){
-        if (this.users.contains(user)) {
-            this.users.remove(user);
-            user.setRole(null);
-        }
-    }
 
 }

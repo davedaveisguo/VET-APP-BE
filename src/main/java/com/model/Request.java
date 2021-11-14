@@ -9,6 +9,7 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 
+import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
@@ -21,15 +22,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 public class Request {
 
     @Id
-    @SequenceGenerator(
-            name = "request_sequence",
-            sequenceName = "request_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "request_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )

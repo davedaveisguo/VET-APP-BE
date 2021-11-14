@@ -24,7 +24,7 @@ public class AppTest {
     @Test
     public void contextLoads() {
         // 创建10条记录
-        userRepo.save(new User("yuhua","guo","5512","Active", LocalDate.of(1990,10,8),"fyhh@gmail.com"));
+//        userRepo.save(new User("yuhua","guo","5512","Active", LocalDate.of(1990,10,8),"fyhh@gmail.com"));
 
 
 

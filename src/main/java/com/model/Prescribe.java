@@ -11,6 +11,7 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 
+import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
@@ -22,15 +23,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class Prescribe {
     @Id
-    @SequenceGenerator(
-            name = "prescribe_sequence",
-            sequenceName = "prescribe_sequence",
-            allocationSize = 1
-    )
-    @GeneratedValue(
-            strategy = SEQUENCE,
-            generator = "prescribe_sequence"
-    )
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )
