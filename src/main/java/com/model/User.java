@@ -75,6 +75,10 @@ public class User implements Serializable {
     private String password;
 
 
+    @Column(name = "reset_password_token")
+    private String resetPasswordToken;
+
+
 
 
     @ManyToMany(fetch = FetchType.LAZY)
