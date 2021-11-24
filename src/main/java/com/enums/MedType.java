@@ -1,8 +1,21 @@
 package com.enums;
 
 public enum MedType {
-    Medicaton,
-    Vaccination,
-    Surgery,
-    Other
+    XRAY,
+    DICOm,
+    SOAP,
+    FORM,
+    IMAGE,
+    NOTE,
+    LAB,
+    LINK,
+    RECHECKS,
+    DX,
+    SURGERY,
+    TRANSFERS,
+    STUDENTSOAP,
+    PROB,
+    INVOICE,
+    PRODUCTNOTE
+
 }

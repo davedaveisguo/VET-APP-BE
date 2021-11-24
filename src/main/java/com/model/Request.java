@@ -9,8 +9,6 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 
-import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @NoArgsConstructor
@@ -26,7 +24,7 @@ public class Request {
     @Column(
             name = "id"
     )
-    private Long id;
+    private int id;
 
     @Column(
             name = "status",

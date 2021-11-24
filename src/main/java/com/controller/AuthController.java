@@ -7,8 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import com.enums.Status;
@@ -53,10 +51,6 @@ public class AuthController {
     JwtUtils jwtUtils;
 
 
-//    @GetMapping("/test")
-//    public String testMe(HttpServletResponse response) {
-//        return "success";
-//    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {

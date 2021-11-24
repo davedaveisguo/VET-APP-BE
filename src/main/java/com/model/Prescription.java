@@ -21,25 +21,19 @@ import static javax.persistence.GenerationType.SEQUENCE;
 @Table(
         name = "prescribe"
 )
-public class Prescribe {
+public class Prescription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(
             name = "id"
     )
-    private Long id;
+    private int id;
 
     @Column(
-            name = "diagnosis",
+            name = "description ",
             nullable = false
     )
-    private String diagnosis;
-
-    @Column(
-            name = "complete_by",
-            nullable = false
-    )
-    private String completeBy;
+    private String description;
 
 
     @Column(
@@ -54,7 +48,7 @@ public class Prescribe {
 
     @ManyToOne
     @JoinColumn(
-            name = "animal_id",
+            name = "animal",
             nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
@@ -62,6 +56,18 @@ public class Prescribe {
             )
     )
     private Animal animal;
+
+
+    @ManyToOne
+    @JoinColumn(
+            name = "user",
+            nullable = false,
+            referencedColumnName = "id",
+            foreignKey = @ForeignKey(
+                    name = "user_prescribe_fk"
+            )
+    )
+    private User user;
 
 
 

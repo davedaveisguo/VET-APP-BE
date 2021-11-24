@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface UserDao extends PagingAndSortingRepository<User, Long> {
 
-    User findUserById(String id);
+
 
     Optional<User> findByUsername(String userName);
 
@@ -23,4 +23,6 @@ public interface UserDao extends PagingAndSortingRepository<User, Long> {
     Boolean existsByUsername(String userName);
 
     Boolean existsByEmail(String email);
+
+
 }

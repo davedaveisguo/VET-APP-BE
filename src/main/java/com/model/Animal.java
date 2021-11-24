@@ -1,6 +1,7 @@
 package com.model;
 
 
+import com.enums.AnimalStatus;
 import com.enums.Sex;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,8 +13,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @NoArgsConstructor
@@ -29,13 +28,13 @@ public class Animal {
     @Column(
             name = "id"
     )
-    private Long id;
+    private int id;
 
     @Column(
-            name = "name",
+            name = "type",
             nullable = false
     )
-    private String name;
+    private String type;
 
     @Column(
             name = "dob",
@@ -44,29 +43,22 @@ public class Animal {
     private LocalDate dob;
 
     @Column(
-            name = "status",
-            nullable = false
+            name = "region"
     )
-    private String status;
+    private String region;
 
-    @Column(
-            name = "injury",
-            nullable = false
-    )
-    private String injury;
 
-    @Column(
-            name = "on_treat",
-            nullable = false
-    )
-    private String onTreat;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private AnimalStatus status;
+
 
 
     @Column(
             name = "weight",
             nullable = false
     )
-    private int weight;
+    private double weight;
 
     @Column(
             name = "age",
@@ -80,8 +72,8 @@ public class Animal {
     private Sex sex;
 
 
-    @Column(name="injury_part",nullable = false)
-    private String part;
+    @Column(name="tattoo",nullable = false)
+    private String tattoo;
 
 
     @Column(name="image_url",nullable = true)
@@ -90,8 +82,12 @@ public class Animal {
     @Column(name="breed",nullable = false)
     private String breed;
 
-    @Column(name="coat_color",nullable = false)
+    @Column(name="coat_color")
     private String color;
+
+
+
+
 
     @OneToMany(
             mappedBy = "animal",
@@ -108,15 +104,9 @@ public class Animal {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
             fetch = FetchType.LAZY
     )
-    private List<Prescribe> prescribes = new ArrayList<>();
+    private List<Prescription> prescribes = new ArrayList<>();
 
-    @OneToMany(
-            mappedBy = "animal",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            fetch = FetchType.LAZY
-    )
-    private List<Report> reports = new ArrayList<>();
+
 
 
     @OneToMany(
@@ -127,8 +117,34 @@ public class Animal {
     )
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(
+            mappedBy = "animal",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<AnimalStatusHistory> hists = new ArrayList<>();
 
-    public void addPrescribe(Prescribe prescribe){
+
+    public void addHist(AnimalStatusHistory hist){
+        if (!this.hists.contains(hist)) {
+            this.hists.add(hist);
+            hist.setAnimal(this);
+        }
+    }
+
+
+    public void removeHist(AnimalStatusHistory hist){
+        if (this.hists.contains(hist)) {
+            this.hists.remove(hist);
+            hist.setAnimal(null);
+        }
+    }
+
+
+
+
+    public void addPrescribe(Prescription prescribe){
         if (!this.prescribes.contains(prescribe)) {
             this.prescribes.add(prescribe);
             prescribe.setAnimal(this);
@@ -136,7 +152,7 @@ public class Animal {
     }
 
 
-    public void removePrescribe(Prescribe prescribe){
+    public void removePrescribe(Prescription prescribe){
         if (this.prescribes.contains(prescribe)) {
             this.prescribes.remove(prescribe);
             prescribe.setAnimal(null);
@@ -158,20 +174,7 @@ public class Animal {
         }
     }
 
-    public void addReport(Report report){
-        if (!this.reports.contains(report)) {
-            this.reports.add(report);
-            report.setAnimal(this);
-        }
-    }
 
-
-    public void removeReport(Report report){
-        if (this.reports.contains(report)) {
-            this.reports.remove(report);
-            report.setAnimal(null);
-        }
-    }
 
     public void addComment(Comment comment){
         if (!this.comments.contains(comment)) {

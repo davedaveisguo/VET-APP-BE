@@ -2,6 +2,8 @@ package com.model;
 
 
 import com.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,11 +12,10 @@ import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @NoArgsConstructor
@@ -58,6 +59,11 @@ public class User implements Serializable {
     )
     private LocalDate dob;
 
+    @Column(
+            name = "creation_date"
+    )
+    private LocalDate createdAt;
+
 
     @Column(
             name = "email",
@@ -72,6 +78,7 @@ public class User implements Serializable {
             name = "password",
             nullable = false
     )
+    @JsonIgnore
     private String password;
 
 
@@ -94,6 +101,55 @@ public class User implements Serializable {
             cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
     )
     private Request request;
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Prescription> prescribes = new ArrayList<>();
+
+
+    @OneToMany(
+            mappedBy = "user",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Comment> comments = new ArrayList<>();
+
+
+    public void addComment(Comment comment){
+        if (!this.comments.contains(comment)) {
+            this.comments.add(comment);
+            comment.setUser(this);
+        }
+    }
+
+
+    public void removeComment(Comment comment){
+        if (this.comments.contains(comment)) {
+            this.comments.remove(comment);
+            comment.setUser(null);
+        }
+    }
+
+
+    public void addPrescribe(Prescription prescribe){
+        if (!this.prescribes.contains(prescribe)) {
+            this.prescribes.add(prescribe);
+            prescribe.setUser(this);
+        }
+    }
+
+
+    public void removePrescribe(Prescription prescribe){
+        if (this.prescribes.contains(prescribe)) {
+            this.prescribes.remove(prescribe);
+            prescribe.setUser(null);
+        }
+    }
 
     public void setRequest(Request request) {
         this.request = request;

@@ -1,25 +1,22 @@
 package com.model;
 
 
+import com.enums.AnimalStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.time.LocalDate;
-
-import static javax.persistence.GenerationType.IDENTITY;
-import static javax.persistence.GenerationType.SEQUENCE;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(
-        name = "comment"
+        name = "animalstatushist"
 )
-public class Comment {
+public class AnimalStatusHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,35 +25,23 @@ public class Comment {
     )
     private int id;
 
-
     @Column(
-            name = "created_at",
+            name = "date",
             nullable = false
     )
-    private LocalDate created;
+    private LocalDate createdAt;
 
-
-    @Column(
-            name = "description",
-            nullable = false,
-            columnDefinition = "TEXT"
-    )
+    @Column(name="description")
     private String description;
 
 
-    @ManyToOne
-    @JoinColumn(
-            name = "user",
-            nullable = false,
-            referencedColumnName = "id",
-            foreignKey = @ForeignKey(
-                    name = "user_comment_fk"
-            )
-    )
-    private User user;
+    @Column(name="location")
+    private String location;
 
 
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private AnimalStatus status;
 
     @ManyToOne
     @JoinColumn(
@@ -64,12 +49,12 @@ public class Comment {
             nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
-                    name = "animal_comment_fk"
+                    name = "animal_hist_fk"
             )
     )
     private Animal animal;
 
 
+
+
 }
-
-
