@@ -78,7 +78,6 @@ public class User implements Serializable {
             name = "password",
             nullable = false
     )
-    @JsonIgnore
     private String password;
 
 
