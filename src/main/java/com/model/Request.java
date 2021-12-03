@@ -1,22 +1,29 @@
 package com.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.enums.AnimalStatus;
+import com.enums.RequestStatus;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 
 import java.time.LocalDate;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(
         name = "request"
 )
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Request {
 
     @Id
@@ -26,11 +33,10 @@ public class Request {
     )
     private int id;
 
-    @Column(
-            name = "status",
-            nullable = false
-    )
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = 20)
+    private RequestStatus status;
 
     @Column(
             name = "req_date",
@@ -51,12 +57,13 @@ public class Request {
     )
     private String returnedUser;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(
             name = "user_id",
+            nullable = false,
             referencedColumnName = "id",
             foreignKey = @ForeignKey(
-                    name = "user_id_fk"
+                    name = "user_request_fk"
             )
     )
     private User user;
@@ -73,5 +80,12 @@ public class Request {
     )
     private Animal animal;
 
-
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
+    @JsonIgnore
+    public Animal getAnimal() {
+        return animal;
+    }
 }

@@ -1,9 +1,7 @@
 package com.model;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,7 +12,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
 
-@Data
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name="Role")

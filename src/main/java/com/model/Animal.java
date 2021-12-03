@@ -3,9 +3,9 @@ package com.model;
 
 import com.enums.AnimalStatus;
 import com.enums.Sex;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,13 +14,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(
         name = "animal"
 )
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class Animal {
 
     @Id
@@ -86,18 +90,6 @@ public class Animal {
     private String color;
 
 
-
-
-
-    @OneToMany(
-            mappedBy = "animal",
-            orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-            fetch = FetchType.LAZY
-    )
-    private List<Request> requests = new ArrayList<>();
-
-
     @OneToMany(
             mappedBy = "animal",
             orphanRemoval = true,
@@ -105,8 +97,6 @@ public class Animal {
             fetch = FetchType.LAZY
     )
     private List<Prescription> prescribes = new ArrayList<>();
-
-
 
 
     @OneToMany(
@@ -124,6 +114,31 @@ public class Animal {
             fetch = FetchType.LAZY
     )
     private List<AnimalStatusHistory> hists = new ArrayList<>();
+
+
+    @OneToMany(
+            mappedBy = "animal",
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
+    )
+    private List<Request> requests = new ArrayList<>();
+
+
+    public void addRequest(Request request){
+        if (!this.requests.contains(request)) {
+            this.requests.add(request);
+            request.setAnimal(this);
+        }
+    }
+
+
+    public void removeRequest(Request request){
+        if (this.requests.contains(request)) {
+            this.requests.remove(request);
+            request.setAnimal(null);
+        }
+    }
 
 
     public void addHist(AnimalStatusHistory hist){
@@ -156,21 +171,6 @@ public class Animal {
         if (this.prescribes.contains(prescribe)) {
             this.prescribes.remove(prescribe);
             prescribe.setAnimal(null);
-        }
-    }
-
-    public void addRequest(Request request){
-        if (!this.requests.contains(request)) {
-            this.requests.add(request);
-            request.setAnimal(this);
-        }
-    }
-
-
-    public void removeRequest(Request request){
-        if (this.requests.contains(request)) {
-            this.requests.remove(request);
-            request.setAnimal(null);
         }
     }
 

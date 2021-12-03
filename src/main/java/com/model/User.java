@@ -2,11 +2,11 @@ package com.model;
 
 
 import com.enums.Status;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -17,13 +17,17 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(
         name = "user"
 )
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 public class User implements Serializable {
 
 
@@ -94,12 +98,13 @@ public class User implements Serializable {
     private Set<Role> roles = new HashSet<>();
 
 
-    @OneToOne(
+    @OneToMany(
             mappedBy = "user",
             orphanRemoval = true,
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE}
+            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            fetch = FetchType.LAZY
     )
-    private Request request;
+    private List<Request> requests  = new ArrayList<>();
 
     @OneToMany(
             mappedBy = "user",
@@ -117,6 +122,22 @@ public class User implements Serializable {
             fetch = FetchType.LAZY
     )
     private List<Comment> comments = new ArrayList<>();
+
+
+    public void addRequest(Request request){
+        if (!this.requests.contains(request)) {
+            this.requests.add(request);
+            request.setUser(this);
+        }
+    }
+
+
+    public void removePrescribe(Request request){
+        if (this.requests.contains(request)) {
+            this.requests.remove(request);
+            request.setUser(null);
+        }
+    }
 
 
     public void addComment(Comment comment){
@@ -150,9 +171,7 @@ public class User implements Serializable {
         }
     }
 
-    public void setRequest(Request request) {
-        this.request = request;
-    }
+
 
     public Set<Role> getRoles() {
         return roles;

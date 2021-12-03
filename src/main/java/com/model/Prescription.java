@@ -3,9 +3,8 @@ package com.model;
 
 import com.enums.MedType;
 import com.enums.Sex;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -14,7 +13,8 @@ import java.time.LocalDate;
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.GenerationType.SEQUENCE;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -69,8 +69,13 @@ public class Prescription {
     )
     private User user;
 
+    @JsonIgnore
+    public Animal getAnimal() {
+    return animal;
+}
 
-
-
-
+    @JsonIgnore
+    public User getUser() {
+        return user;
+    }
 }

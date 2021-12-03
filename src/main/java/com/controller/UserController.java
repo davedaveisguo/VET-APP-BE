@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +41,8 @@ public class UserController {
 
         ResponseTemplate ret = new ResponseTemplate();
 
-        Iterable<User> users = userRepository.findAll();
+        Iterable<User> users = userRepository.findAll();;
+
         ret.setData(users);
         ret.setCode(HttpStatus.OK.value());
         ret.setMessage("find all succ");
@@ -99,6 +101,7 @@ public class UserController {
         Set<Role> roles = new HashSet<>();
         roles.add(role);
         user.setRoles(roles);
+        user.setCreatedAt(LocalDate.now());
         user.setPassword(encoder.encode(user.getPassword()));
         userRepository.save(user);
         ret.setCode(HttpStatus.OK.value());
@@ -112,7 +115,9 @@ public class UserController {
     public ResponseTemplate updateUserConfig(@RequestBody User user, HttpServletRequest request) {
 
         ResponseTemplate ret = new ResponseTemplate();
-        String userPwd = userRepository.findById(user.getId()).get().getPassword();
+        User userfromdb = userRepository.findById(user.getId()).get();
+        String userPwd = userfromdb.getPassword();
+        LocalDate creation = userfromdb.getCreatedAt();
         String encodedPwd = "";
         // password changed
         if(!userPwd.equals(user.getPassword())){
@@ -121,6 +126,7 @@ public class UserController {
             encodedPwd = userPwd;
         }
         user.setPassword(encodedPwd);
+        user.setCreatedAt(creation);
         userRepository.save(user);
         ret.setCode(HttpStatus.OK.value());
         ret.setMessage("update succ");
