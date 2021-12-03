@@ -35,8 +35,13 @@ public class Request {
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", length = 20)
-    private RequestStatus status;
+    @Column(name = "adminstatus", length = 20)
+    private RequestStatus adminstatus;
+
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "techstatus", length = 20)
+    private RequestStatus techstatus;
 
     @Column(
             name = "req_date",
