@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface RoleDao extends PagingAndSortingRepository<Role, Long> {
+public interface RoleDao extends PagingAndSortingRepository<Role, Integer> {
     Optional<Role> findByRoleName(ERole roleName);
 }

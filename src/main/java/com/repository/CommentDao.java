@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface CommentDao extends PagingAndSortingRepository<Comment, Long> {
+public interface CommentDao extends PagingAndSortingRepository<Comment, Integer> {
 
 }

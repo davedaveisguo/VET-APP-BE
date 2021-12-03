@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface PrescribeDao extends PagingAndSortingRepository<Prescription, Long> {
+public interface PrescribeDao extends PagingAndSortingRepository<Prescription, Integer> {
 
 }
