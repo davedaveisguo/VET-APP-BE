@@ -1,8 +1,10 @@
 package com.controller;
 
 
+import com.enums.AnimalStatus;
 import com.enums.RequestStatus;
 import com.model.*;
+import com.repository.AnimalDao;
 import com.repository.RequestDao;
 import com.repository.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,11 @@ public class RequestController {
 
     @Autowired
     private UserDao userRepository;
+
+
+    @Autowired
+    private AnimalDao animalRepository;
+
 
 
 
@@ -68,6 +75,19 @@ public class RequestController {
         }else if(type.equals(ERole.ROLE_ANIMALHTTECH.toString())) {
             requestfromdb.setTechstatus(RequestStatus.valueOf(status));
         }
+
+        int animalId = requestfromdb.getAnimal().getId();
+        // get animal repo
+        Animal animalFromDb = animalRepository.findById(animalId).get();
+        if(requestfromdb.getAdminstatus().equals(RequestStatus.APPROVED) && requestfromdb.getTechstatus().equals(RequestStatus.APPROVED))
+        {
+            animalFromDb.setStatus(AnimalStatus.Unavailable);
+        }else if(requestfromdb.getAdminstatus().equals(RequestStatus.DECLINED) && requestfromdb.getTechstatus().equals(RequestStatus.DECLINED))
+        {
+            animalFromDb.setStatus(AnimalStatus.Available);
+        }
+
+        animalRepository.save(animalFromDb);
         requestRepository.save(requestfromdb);
         ret.setCode(HttpStatus.OK.value());
         ret.setMessage("update request succ");

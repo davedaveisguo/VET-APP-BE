@@ -17,8 +17,12 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -49,6 +53,7 @@ public class UserController {
 
         return ret;
     }
+
 
     @RequestMapping(value = "/getuserById", method = RequestMethod.GET)
     public ResponseTemplate fetchById(Userobj userobj) {
